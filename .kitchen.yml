@@ -23,6 +23,14 @@ platforms:
         - SYS_ADMIN
       volumes:
         - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: ubuntu-18.04
+    driver:
+      image: dokken/ubuntu-18.04
+      pid_one_command: /bin/systemd
+      cap_add:
+        - SYS_ADMIN
+      volumes:
+        - /sys/fs:/sys/fs:ro
 
 suites:
   - name: default
