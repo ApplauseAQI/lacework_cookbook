@@ -17,9 +17,21 @@
 # limitations under the License.
 #
 
-# apt_repository 'lacework' do
-#   source "#{download_url}/latest/DEB/Ubuntu/16.04 xenial main"
-#   source "#{download_url}/latest/DEB/Debian/9 whatever main"
+dist = node['platform']
+pver =
+  if node['platform'] == 'debian'
+    node['platform_version'].to_i
+  else
+    node['platform_version'].to_f
+  end
+
+apt_repository 'lacework' do
+  uri "https://packages.lacework.net/DEB/#{dist}/#{pver}/"
+  arch 'amd64'
+  components ['main']
+  key '18E76630'
+  only_if { node['platform_family'] == 'debian' }
+end
 
 yum_repository 'lacework' do
   description 'Lacework repository'
@@ -27,7 +39,7 @@ yum_repository 'lacework' do
   enabled true
   gpgcheck true
   gpgkey 'https://packages.lacework.net/keys/RPM-GPG-KEY-lacework'
-  action :create
+  only_if { node['platform_family'] == 'rhel' || node['platform_family'] == 'amazon' }
 end
 
 directory '/var/lib/lacework/config' do
@@ -41,7 +53,13 @@ template '/var/lib/lacework/config/config.json' do
   action :create
 end
 
+ver =
+  if platform_family?('rhel', 'amazon')
+    "#{node['lacework']['version']}-1"
+  else
+    node['lacework']['version']
+  end
 package 'lacework' do
-  version "#{node['lacework']['version']}-1"
+  version ver
   action :install
 end
