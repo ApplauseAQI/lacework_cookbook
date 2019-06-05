@@ -5,4 +5,4 @@
 
 ## Description
 
-This cookbook installs the Lacework data collector.
+This cookbook installs the Lacework data collector. It requires you to provide your access token.
