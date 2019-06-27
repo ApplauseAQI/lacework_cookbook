@@ -51,6 +51,7 @@ template '/var/lib/lacework/config/config.json' do
   source 'config.json.erb'
   sensitive true
   action :create
+  notifies :restart, 'service[datacollector]', :delayed if node['lacework']['agent_start'].to_s == 'true'
 end
 
 ver =
@@ -62,4 +63,11 @@ ver =
 package 'lacework' do
   version ver
   action :install
+end
+
+svc_actions = []
+svc_actions += [:enable] if node['lacework']['agent_enable'].to_s == 'true'
+svc_actions += [:start] if node['lacework']['agent_start'].to_s == 'true'
+service 'datacollector' do
+  action svc_actions
 end
