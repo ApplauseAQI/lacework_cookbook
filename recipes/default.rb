@@ -55,7 +55,7 @@ template '/var/lib/lacework/config/config.json' do
 end
 
 ver =
-  if platform_family?('rhel', 'amazon')
+  if platform_family?('rhel', 'amazon') && !node['lacework']['version'].nil?
     "#{node['lacework']['version']}-1"
   else
     node['lacework']['version']
