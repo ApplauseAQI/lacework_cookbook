@@ -18,6 +18,6 @@
 #
 
 default['lacework']['access_token'] = 'CHANGEME'
-default['lacework']['version'] = '2.4.39'
+default['lacework']['version'] = nil
 default['lacework']['agent_enable'] = true
 default['lacework']['agent_start'] = true
